@@ -1,0 +1,41 @@
+1.异常处理机制
+	问题的检测和问题的处理分开
+	异常：任何东西都可以当做异常抛出
+2.异常的抛出与捕获与处理
+	（1）throw抛出异常
+	（2）try与catch进行捕获和处理异常
+		注意点：
+		1.try和catch必须同时成对出现，try必须至少带有一个catch
+		2.当抛出的异常没有做处理，会调用默认处理函数abort终止程序
+	（3）当函数不存在异常，throw（）或者noexcept
+		noexcept：如果一定要抛出异常，则会直接引发中断（处理异常也无效）
+	（4）捕获任何东西当做异常   删减符...  （catch（...））
+	int resultValue(int a,int b)//判断除法
+	{
+		if(b==0)
+		{
+			throw -1;
+		}
+		return a/b;
+	}
+	void print(int  a,int  b)
+	{
+		try
+		{
+			cout<<resultValue(a,b)<<endl;//遇到异常后直接跳转到catch，后面的语句不处理
+			cout<<“异常处理”<<endl;
+		}
+		catch(int)//根据抛出异常决定如何处理
+		{
+			cout<<“z横竖不能为零”<<endl;
+		}
+		catch(double)
+		{
+			cout<<“catch double”;
+		}
+	}
+3,异常处理的传参操作
+	catch中其实可以传入参数，只要与抛出数据类型一致的操作，就可以进行一个传参操作
+	catch(int value)//将value赋值为throw的数据 
+4.我们也可以抛出自定义类型的异常
+	充分的描述异常的信息

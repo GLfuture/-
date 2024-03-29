@@ -1,0 +1,33 @@
+迭代器的分类：
+1.按定义分类：
+（1）正向迭代器
+	容器类名: :iterator  迭代器名；
+	begin( );
+	end( );
+（2）常量正向的迭代器
+	容器类名: :const_iterator  迭代器名;
+	cbegin( );
+	cend( );
+（3）反向迭代器
+	容器类名: :reverse_iterator  迭代器名;
+	rbegin( );
+	rend( );
+（4）常量的反向迭代器
+	容器类名：：const_reverse_iterator  迭代器名;
+	crbegin( );
+	crend( );
+2.按功能分类
+（1）正向迭代器
+（2）双向迭代器
+（3）随机访问迭代器
+3.容器内置迭代器
+容器				迭代器
+array				随机访问
+vector				随机访问
+deque			随机访问
+list				双向
+set/multiset			双向
+map/multimap		双向
+stack				不支持
+queue				不支持
+priority_queue		不支持

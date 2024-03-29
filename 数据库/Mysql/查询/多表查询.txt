@@ -1,0 +1,6 @@
+多表查询：
+若直接SELECT * FROM emp，dept；会显示两个表的笛卡尔积，即两表相乘
+需要用WHERE限定（注意可能出现二义性，需要用字段限定如：emp.deptno=dept.deptno）
+
+
+

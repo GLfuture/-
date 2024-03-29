@@ -1,0 +1,21 @@
+1.输入输出流对象
+	cin	标准输出	从键盘读取，可以重定向为文件
+	cout	标准输出	输出到屏幕，可以重定向为文件
+	cerr	标准错误	必须输出到屏幕，不可重定向
+	clog	标准错误	输出到屏幕，可重定向
+2.流对象常用函数（字符和字符串的操作上）
+	cin.getline(str，20)//20个长度的字符串
+	cin.get( )//接受一个字符//返回int
+	cin.get(*str ,count,'#' )//读最多count个字符，读到‘#'停下来
+	cout.put('A')//输出一个字符
+	cout.write("str",count)//输出最多count个字符的字符串
+3.流控制字符
+	(1)需要包含特定头文件    #include<iomanip>
+	(2)关键字的形式，一个是成员函数的形式
+	setbase(n)		设置整数位n进制
+	setfill('x')		设置填充字符
+	steprecision(n)	设置精度//有效数字的位数，设置小数位数前要加fixed   (cout.precision（n）)
+	setw(n)		设置宽度（cout.width(n)）
+	setiosflags(ios::scientific)	设置科学计数法
+	setiosflags(ios::left(right))	设置左（右）对齐
+

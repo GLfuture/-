@@ -1,0 +1,24 @@
+1.纯虚函数就是没有函数体的虚函数，虚函数=0；
+2.具有一个或者多个纯虚函数的类叫抽象类
+	（1）抽象类不能构建对象
+	（2）抽象类可以构建对象指针
+3. ADT：抽象数据类型
+	抽象类被继承下来，子类如果想要构建对象，必须要把父类中的纯虚函数重写（可以使用override关键字）
+
+```c++
+class Animal
+{
+	public:
+	virtual void cry( )=0;
+	virtual ~Animal( ){ };
+}
+class Dog:public Animal
+{
+	public:
+	void cry( ) override
+	{
+		cout<<"汪汪"<<endl;
+	}
+}
+```
+

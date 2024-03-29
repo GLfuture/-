@@ -1,0 +1,20 @@
+函数						作用
+IF（expr，v1，v2）			如果表达式expr成立返回结果v1，否则返回v2
+IFNULL（v1,v2）				如果v1的值不为NULL，则返回v1，否则返回v2
+
+
+CASE						分支语句
+语法1：
+CASE
+	WHEN   expr1   THEN  v1
+	WHEN   expr2   THEN  v2
+	...
+	ELSE   vn
+END
+语法2：
+CASE expr 
+	WHEN  e1  THEN  v1
+	WHEN  e2  THEN  v2
+	...
+	ELSE  vn
+END

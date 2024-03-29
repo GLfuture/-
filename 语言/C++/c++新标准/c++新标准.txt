@@ -1,0 +1,108 @@
+一、强制转换：采用Type b=(Type)a形式转换。缺点：万物皆可转，不容易区分，不容易查找代码。
+	C++的四种类型转换操作符
+	static_cast：静态类型转换，编译器做类型检查，基本类型能转换，指针不能
+		（1）基本数据类型转换，enum,struct,int,char,float等。static_cast不能进行无关类型（如非基类和子类）指针之间的转换。
+		（2）可用于void*和其他指针类型之间的转换（但是不能用于非void指针之间的转换）
+		（3）不能用于两个不相关类型的转换，如int和int*之间的转换，虽然两者都是四个字节，但是他们一个表示数据，一个表示地址，类型不相关，无法进行转换。 
+		例：   int age=19;
+			double d = age ;(隐式类型转换)
+			double d = (double)age;(C语言)
+			double d = static_cast<double>(age);(C++)
+			double *p=&age;
+		注：不能直接将类型指针转换为其他类型的指针，但可以先将该类型指针转换为void*类型，再转换为其他类型指针。
+	reinterpret_cast：重新解释类型 
+	const_cast：去const属性
+	dynamic_cast：动态类型转换，运行时检查类型安全（转换失败返回nullptr）如子类和父类之间的多态类型转换（判断父类指针指向的是哪个子类对象）
+	//写一个函数，根据不同的对象做不同的事情
+class Animal
+{
+public:
+	virtual void cry( )=0;
+	virtual ~Animal( ){ };
+}
+class Dog:public Animal
+{
+public:
+	void cry( ) override
+	{
+		cout<<"汪汪"<<endl;
+	}
+	void SeeHome( )
+	{
+		cout<<"看家"<<endl;
+	}
+}
+class Cat:public Animal
+{
+public:
+	void cry( ) override
+	{
+		cout<<"喵喵"<<endl;
+	} 
+	void CatchMouse( )
+	{
+		cout<<"抓老鼠"<<endl;
+	}
+}
+//功能函数(可以根据函数传进的实参的类型（Dog*或者Cat*）输出对应的行为)
+void obj( Animal *base)
+{
+	Dog* dog=dynamic_cast<Dog*>(base);//dynamic_cast会返回一个bool类型的数据判断是否返回成功
+	if(dog)
+	{
+		dog->SeeHome( );
+	}
+	Cat* cat=dynamic_cast<Cat*>(base);
+	if(cat)
+	{	
+		cat->CatchMouse( );
+	}
+}
+二、抑制转义字符
+	当cout<<"D:\work\projects"；时无法识别\w和\p转义字符而不会输出\，
+	需要输出\时用\\，"用\"
+	例：   string path="D:\work\projects";
+	抑制：string path1=R"(D:\work\projects)";
+三、decltype和auto 类似，都是用来自动推导类型的
+	auto：auto是根据初始化的值，用来推断类型的（auto定义的时候必须初始化）
+	decltype:可以根据表达式推导类型
+	decltype(exp):exp（表达式   运算的结果必须有类型，不能是void）
+	decltype(2)  day;定义一个int型变量day 
+	decltype(2)  day = 60 ;可以赋值
+	(1)如果exp是一个不被括号（）包围的表达式，那么decltype（exp）的类型就和exp一致
+	(2)如果exp是函数调用，那么decltype（exp）的类型就和函数返回值的类型一样
+	(3)如果exp是一个左值，或者被括号包围，那么decltype（exp）的类型就是exp的引用
+	(3)的实例： decltype（（4））d = a;//d是int&类型
+			decltype(m+=n) d  = a;//d是int&类型,因为m是左值
+四、函数返回类型后置
+	auto num( ) ->int 
+	{
+		return 5 ; 
+	}
+
+	注：该语法主要用于模板
+	template<typename T,typename U>
+	auto add(T a,U b)->decltype( a+ b)
+	{
+		return a+b;
+	}
+	//确定返回类型到底是T还是U
+五、lambda匿名函数
+	（1）定义：[ 外部变量访问方式说明符](参数) mutable noexcept->返回值类型
+			{
+				函数体; 
+			}
+			注：外部变量访问说明符：
+			1.[ ]不捕获任何变量
+			2.[=]   以值的方式捕获,而且在函数内部不可以修改变量的值，自动加了const属性，可以在（）后面加上mutable可以使用函数外部变量，但无法修改变量在外部的值
+			3.[&]   以引用的方式捕获，可以修改外部变量的值，而且会影响外部变量
+			4.[ this ]   成员函数
+			5.[=,&变量]  组合方式(指定某变量引用的方式，其他变量值的方式)
+			6.[&变量]  指定变量方式
+		Lambda表达式返回的是一个函数指针，通常用一个auto类型变量接受
+		除了捕获方式和函数体之外的东西，如果没有，或者没必要描述的都可以省略
+		auto fun = [&age,num]( )mutable { }；
+	（2）
+六、完美转发：在函数模板里面，调用别的函数，那么给函数模板传什么类型的参数，那么函数模板就要给里面的函数传什么类型的参数
+	std::forward<T>(val)
+	std::move(val)//将左值变为右值

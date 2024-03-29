@@ -1,0 +1,50 @@
+数据库的指令不分大小写，但字符串分，每条命令以;结束
+基本查询:
+1.查询多个字段
+以下为在MySQL数据库中查询数据通用的select语法
+（1）select  字段名，字段名....from 表名;
+（2）select * from 表名//查询所有字段;（不推荐使用*，影响效率）
+	查询语句中可以使用一个或者多个表，表之间使用逗号（,）隔开，并使用where语句来设定查询条件。
+	select 命令可以读取一条或者多条记录
+	你可以使用星号（*）来代替其他字段，select语句会返回表的所有字段数据
+2.设置别名
+（1）select 字段1  [AS  别名] , 字段2 [AS 别名]...from 表名;
+	AS可以省略，如：SELECT ename ,job '工作岗位' FROM emp;
+3.去除重复记录
+（1）select distinct 字段列表 from 表名;
+	SELECT DISTINCT job FROM emp(多个字段不能去除重复的)
+4.四则运算查询
+ SELECT ename ,sal  AS  '月薪' ,sal * 12 AS ' 年薪' FROM emp;
+5.条件查询
+SELECT 字段名 FROM 表名 WHILE 条件;
+运算符表
+关系运算符                        功能
+>				大于
+>=				大于等于
+<				小于
+<=				小于等于
+=				等于
+<>或 !=			不等于
+
+逻辑运算符			功能
+AND或&&			并且（多个条件同时成立）
+OR或||			或者（多个条件任意成立一个）
+NOT或！			非，不是
+
+其他				功能
+BETWEEN...AND...		在某个范围之间（含最小、最大值）
+IN(...)	·			在in之后的列表中的值，多选一
+LIKE				模糊匹配（_匹配单个字符，%匹配任意个字符）
+IS[ NOT] NULL		是NULL
+
+
+例：
+SELECT * FROM emp WHERE sal=3000;
+SELECT * FROM emp WHERE sal(800,3000,5000);
+查询姓名为四个字的员工
+SELECT * FROM emp WHERE ename LIKE '_ _ _ _'
+查询姓名最后一位是S的员工
+SELECT * FROM emp WHERE ename LIKE '%S'
+
+
+

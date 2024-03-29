@@ -1,0 +1,26 @@
+1.函数适配器：
+bind1st  将参数绑定为二元函数对象的第一个参数，这个函数只能用来绑定仿函数，普通函数不行
+注意：自定义的仿函数，还必须从系统定义的一个类继承
+一个参数的仿函数从：unary_function<int  ,void>
+两个参数的仿函数从：binary_function<int ,int ,void>
+bind2nd 将参数绑定为二元函数对象的第二个参数
+bind 将参数绑定为n元函数对象的第n个参数
+bool cmp( int a,int b)
+{
+     return a>b;
+ }
+cout<<count_if( v.begin( ) , v.end( ) , std:  :bind( cmp ,std::placeholders::_1,6) ) ;
+//如果不对参数进行绑定
+
+求反器：
+not1 对一元函数对象取反 
+not2 对二元函数对象取反 
+
+
+
+注：除bind，其他适配器或求反器操作的可调用对象均为仿函数
+成员函数适配器：
+mem_fun 把成员函数转为仿函数（容器里存的是指针）
+mem_fun_ref 修饰成员函数（容器里存的是对象）
+以上所有包含在functional头文件中
+输出真值bool的true和false可以cout<<boolalpha<<1<<endl;

@@ -1,0 +1,24 @@
+CURTIME（）；//获取当前时间（与CRRENT_TIME效果相同，CURRENT_TIME后既可以加（）,也可以不加）
+CURDATE（）; //获取当前日期（与CRRENT_DATE效果相同，CURRENT_DATE后既可以加（）,也可以不加）
+NOW（）；//获取当前的日期和时间
+
+YEAR（CURDATE（））；//获取年
+MONTH（CURDATE（））；//获取月
+DAY（CURDATE（）)；//获取日
+DAYOFWEEK（CURDATE（））；//获取指定日期是星期几 ，1代表星期日，2代表星期1...
+DAYOFYEAR（CURDATE（））；//获取指定日期是本年的第几天
+QUARTER（CURDATE（））；//获取指定日期是本年的第几个季度
+
+HOUR（CURTIME（））；//获取指定时间的小时
+MINUTE（CURTIME（））；//获取指定时间的分钟
+SECOND（CURTIME（））；//获取指定时间的秒数
+
+TIME_TO_SEC（CURTIME（））；//将指定时间转化为秒
+SEC_TO_TIME（秒数）；//将秒数转化为时间
+ADDTIME（CURTIME（），‘5:00:00’）;//计算时间加上某个时间的结果
+SUBTIME（CURTIME（），‘5:00:00’）；//计算时间减去某个时间的结果
+
+ADDDATE（CURDATE（）,2）//计算日期加上n天后的日期
+SUBDATE（CURDATE（）,2）//计算日期减去n天后的日期
+DATE_FORMAT（CURDATE（），' %y-%m-%d'）//格式化显示日期（y-年，m-月，d-日）字母大写显示也大写
+TIME_FORMAT（CURTIME（），‘%h:%i:%s’）//格式化显示日期（h-时，i-分，s-秒）字母大写显示也大写

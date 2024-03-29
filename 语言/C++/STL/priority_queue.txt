@@ -1,0 +1,3 @@
+NO.1基本操作
+priority_queue:优先队列（排好序的队列）
+priority_queue<int  ,  vector<int> ,  less<int>>  data;    less<>从大到小,greater<>从小到大

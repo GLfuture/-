@@ -1,0 +1,8 @@
+函数								作用
+VERSION							返回数据库的版本号
+CONNECTION_ID（）					返回数据库连接id
+DATEBASE（）、SCHEMA				返回当前数据库名
+USER（）、SYSTEM_USER（）、SESSION_USER（）返回当前用户
+CURRENT_USER（）、CURRENT_USER
+CHARSET（str）						返回字符串str的字符集
+COLLATION（str）						返回字符串str的字符排列方式

@@ -1,0 +1,55 @@
+1.仿函数相对于其他函数来说是有状态的
+2.algorithm头文件
+	count_if(iterator first,iterator end,pr Pr)//从容器的begin开始到end，返回符合Pr条件的值
+	pr:谓词（是指普通函数或重载的operator（）返回值是bool类型的函数对象（仿函数），如果operator（）
+	接受一个参数为一元谓词，两个参数为二元谓词,谓词可作为判断式）
+	for_each(iterator begin,iterator end,Fn f)//对于容器中的每个元素做f函数的内容（for_each的返回值
+	是f这个函数）
+3.
+基本查找
+find( )区间查找
+find_if( )条件查找
+find_first_of( )区间第一次（只要查找到需要查找的数中的其中一个就返回）
+如：	array[5]={1,2,3,4,5}；
+	temp[ ]={13,2,5};
+	*find_first_of(array,array+5,temp,temp+3)的结果为2
+adjacent_find()查找第一次重复的数
+search（）：子序列查找
+search_n（）：找到指定出现次数的元素（重复出现的，连续的）
+如：	search_n（value,value+10,4,2）;
+	查找首次出现连续四个大于4的元素的位置
+	search_n（value,value+10,4,4,[ ](int i,int j){ return i>j;}）;
+统计查找
+count（）：区间统计
+count_if（）：条件统计
+equal（）:比较
+
+有序查找
+binary_search（）：二分查找//返回bool类型
+upper_bound（）：查找最后一个大于查找的值的位置
+lower_bound（）：查找最后一个大于等于查找的值的位置
+equal_range（）：区间比较(有序序列)（返回值中有first和second，first存储的是第一次等于查找元素的
+位置，second储存的是第一次大于查找元素的位置）
+
+排序
+sort（）//只支持随机访问迭代器
+stable_sort（）//保持相对顺序进行排序
+merge（begin1，end1，begin2，end2，储存容器或数组）//归并排序（两个有序数组或容器），保持原容器的顺序
+当 2 个有序序列存储在同一个数组或容器中时，如果想将它们合并为 1 个有序序列，除了使用 merge() 函数，更推荐使用 inplace_merge() 函数。
+inplace_merge (BidirectionalIterator first, BidirectionalIterator middle,BidirectionalIterator last, Compare comp);
+
+分类处理
+partition（）
+保持原容器顺序
+stable_partition（）
+
+正向拷贝
+copy（）三个参数
+逆向拷贝
+copy_backward（）三个参数，第三个参数为新容器的end位置
+
+删除算法
+remove（）此类算法并不会影响容器的元素个数，用后面的数覆盖掉前面的值，类似数组的伪删除
+如果删除元素不存在，返回一个容器的结束位置
+
+remove_copy（）把删除后的结果保存到新的容器中去

@@ -1,0 +1,33 @@
+1.修改表名
+方式一：只能修改一个表的名称
+ALTER  TABLE  memp  RENAME  TO emp;
+方式二：同时修改多个表名
+RENAME  TABLE  memp1  TO  emep;
+RENAME  TABLE   emep  TO  memp,emep  TO  memp1;
+2.修改表的字符集
+ALTER  TABLE  db.memp  CONVERT  TO  CHARACTER  SET   'gbk';
+
+3.修改字段
+
+--添加字段
+（1）在最后添加字段
+ALTER  TABLE  test  ADD  comm  DECIMAL( 10 , 2 );
+（2）在最前面添加字段
+ALTER  TABLE  text   ADD  deptno  INT  FIRST;
+（3）在指定位置添加字段
+ALTER TABLE test  ADD  hiredate  DATE  AFTER  ename;
+--删除字段
+ALTER  TABLE  test  DROP  deptno;
+--修改字段
+-----（1）修改数据的数据类型
+ALTER  TABLE  test  MODIFY  hiredate  DATETIME(修改后的名称);
+-----（2）修改字段名称
+ALTER  TABLE  test  CHANGE  salgrade  sal（改后的名称）  DECIMAL（8，2）；
+-----（3）修改字段的顺序
+	1.把字段放在第一个
+		ALTER  TABLE  test  MODIFY  sal DECIMAL（8，2） FIRST;
+	2.把字段放在指定字段之后
+		ALTER  TABLE  test  MODIFY  sal  DECIMAL（8，2）AFTER  ename;
+ ALTER  TABLE  test  MODIFY  
+4.删除表
+DROP  TABLE  IF  EXSISTS  sal ,memp1,memp2;

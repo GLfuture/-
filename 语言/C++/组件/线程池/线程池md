@@ -1,0 +1,385 @@
+## 线程池
+
+### 线程池使用场景
+
+某类任务(磁盘IO、网络IO)特别耗时，严重影响该线程处理其他任务
+
+此时，在其他线程中异步解决该任务
+
+线程池中线程的数量和CPU核心数有关
+
+---
+
+### 为什么使用线程池
+
+1.避免线程太多，使内存耗尽
+
+2.避免创建与销毁线程的代价
+
+3.任务与执行分离
+
+---
+
+### 线程池的构成
+
+![image-20230410163657617](images/image-20230410163657617.png)
+
+---
+
+### 实现一个线程池
+
+##### 1.线程池接口设计
+
+- 创建线程池
+
+  需要的参数：1.线程的数量 2.队列的长度
+
+  为什么要固定队列的长度？
+
+  因为一个线程的栈空间是有限的，一个线程默认占空间为8M
+
+- 销毁线程池
+
+  1.标记线程池退出
+
+  2.通知所有线程
+
+- 生产者抛出任务
+
+  1.构造任务
+
+  2.放入队列
+
+  3.通知线程唤醒
+
+- 消费者线程取出任务
+
+
+
+##### 2.代码实现
+
+引入管理组件管理任务队列和执行队列
+
+即线程池分为三部分：任务队列、管理组件、执行队列
+
+注意事项:
+
+```c++
+sleep_for(std::chrono::seconds(1))//休眠一秒
+```
+
+```c++
+thread绑定函数参数为引用时要使用std::ref
+```
+
+thread 使用构造函数的时候
+
+1.如果使用的是类内的成员函数则必须指明对象
+
+如：
+
+```c++
+class A
+{
+public:
+	void f(){}
+}
+//thread th(&A::f) 报错，必须先声明出一个A类型的对象，以对象为载体创建线程
+A a;
+thread th(&A::f,a);//或者thread th(&A::f,&a)都没报错
+```
+
+2.当函数为普通函数时，不必指明对象
+
+c语言实现线程池（不完全c）
+
+```c++
+#include<iostream>
+#include<vector>
+#include<pthread.h>
+#include<string.h>
+#include<atomic>
+#include<mutex>
+using namespace std;
+#define LIST_INSERT(item, list) do {	\
+	item->prev = NULL;					\
+	item->next = list;					\
+	if ((list) != NULL) (list)->prev = item; \
+	(list) = item;						\
+} while(0)
+
+
+#define LIST_REMOVE(item, list) do {	\
+	if (item->prev != NULL) item->prev->next = item->next; \
+	if (item->next != NULL) item->next->prev = item->prev; \
+	if (list == item) list = item->next; 					\
+	item->prev = item->next = NULL;							\
+} while(0)
+class nManager;
+class nTask
+{
+public:
+    void (*task_func)(nTask *arg);
+    void *user_data;
+    nTask *prev;
+    nTask *next;
+};
+//Worker
+class nWorker
+{
+public:
+    nManager *manager;//worker需要访问线程池
+    pthread_t threadid;
+    int terminate;//是否终止
+    nWorker* prev;
+    nWorker* next;
+};
+//Manager
+class nManager
+{
+public:
+    nTask *tasks;
+    nWorker *workers;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+};
+using ThreadPool=nManager;
+//线程回调(实现)
+static void *nThread_callback(void *arg)
+{
+    nWorker *worker=(nWorker*)(arg);
+    while(1)
+    {
+        //lock_guard<std::mutex> Lock(worker->manager->mutex);
+        pthread_mutex_lock(&worker->manager->mutex);
+        while(worker->manager->tasks==NULL)
+        {
+            if(worker->terminate) break;
+            pthread_cond_wait(&worker->manager->cond,&worker->manager->mutex);
+        }
+        if(worker->terminate) 
+        {
+            pthread_mutex_unlock(&worker->manager->mutex);
+            break;
+        }
+        nTask *task=worker->manager->tasks;
+        LIST_REMOVE(task,worker->manager->tasks);
+        pthread_mutex_unlock(&worker->manager->mutex);
+
+        task->task_func(task);
+    }
+    delete worker;
+}
+//线程池创建
+int nthread_pool_init(ThreadPool* pool,int Workernum)
+{
+    if( pool == NULL ) return -1;
+    if(Workernum < 1) Workernum = 1;
+    memset(pool,0,sizeof(ThreadPool));
+    pool->cond=PTHREAD_COND_INITIALIZER;
+    pthread_mutex_init(&pool->mutex,NULL);
+    for(int i=0;i<Workernum;i++)
+    {
+        nWorker* worker=new nWorker;
+        if(!worker)
+        {
+            perror("new");
+            return -2;
+        }
+        memset(worker,0,sizeof(nWorker));
+        worker->manager = pool;
+        int ret = pthread_create(&worker->threadid,NULL,nThread_callback,worker);
+        if(ret)
+        {
+            perror("phread_create");
+            delete worker;
+            return -3;
+        }
+        LIST_INSERT(worker,pool->workers);
+        cout<<"LIST_INSERT"<<endl;
+    }
+    //success
+    return 0;
+}
+int nThread_pool_destory(ThreadPool* pool,int Workernum)
+{
+    nWorker* worker = NULL;
+    for(worker=pool->workers;worker!=NULL;worker=worker->next)
+    {
+        worker->terminate;
+    }
+
+    pthread_mutex_lock(&pool->mutex);
+    pthread_cond_broadcast(&pool->cond);
+    pthread_mutex_unlock(&pool->mutex);
+    pool->workers=NULL;
+    pool->tasks=NULL;
+    return 0;
+}
+
+int nTread_pool_pushtask(ThreadPool* pool,nTask* task)
+{
+    pthread_mutex_lock(&pool->mutex);
+    LIST_INSERT(task,pool->tasks);
+    pthread_cond_signal(&pool->cond);
+    pthread_mutex_unlock(&pool->mutex);
+}
+//sdk-->debug thread pool
+
+
+#if 1
+#define INIT_THREAD_NUM 20
+#define TASK_INIT_NUM 1000
+
+//任务入口
+void task_entry(nTask* task)
+{
+    //nTask*task=(nTask*)(arg);
+    int idx=*(int *)(task->user_data);
+    cout<<"idx:  "<<idx<<endl;
+    delete task;
+}
+
+
+int main(void){
+    ThreadPool pool;
+    nthread_pool_init(&pool,INIT_THREAD_NUM);
+    cout<<"create finished"<<endl;
+    for(int i=0;i<TASK_INIT_NUM;i++)
+    {
+        nTask* task=new nTask;
+        if(task==NULL)
+        {
+            perror("new");
+            exit(1);
+        }
+        memset(task,0,sizeof(nTask));
+        task->task_func=task_entry;
+        task->user_data=new int;
+        *(int*)(task->user_data)=i;
+        nTread_pool_pushtask(&pool,task);
+    }
+    getchar();
+    return 0;
+}
+
+#endif
+```
+
+C++实现线程池
+
+##### ThreadPool.h
+
+```c++
+#pragma once
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<mutex>
+#include<condition_variable>
+#include<memory>
+#include<thread>
+#include<functional>
+#include<future>
+#include<pthread.h>
+using namespace std;
+class Task
+{
+public:
+	function<void()> func;
+	shared_ptr<void> data;
+};
+
+class ThreadPool
+{
+public:
+	ThreadPool(int th_num);
+
+	void run();
+
+	void Destory();
+
+	template<class F, class ...Args>
+	auto exec(F&& f, Args&&...args) -> future<decltype(f(args...))>
+	{
+		using ReType = decltype(f(args...));
+		shared_ptr<packaged_task<ReType()>> Func = std::make_shared<std::packaged_task<ReType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+		shared_ptr<Task> task = make_shared<Task>();
+		task->func = [Func]() {
+			(*Func)();
+		};
+		this->tasks.push(task);
+		this->cond.notify_one();//唤醒一个线程
+		return Func->get_future();
+	}
+
+	bool Task_empty() {
+		return tasks.empty();
+	}
+	bool Terminate() {
+		//unique_lock<mutex> lock(this->mtx);
+		return this->terminate;
+	}
+private:
+	vector<shared_ptr<thread>> threads;//工作线程
+	queue<shared_ptr<Task>> tasks;//任务队列
+	condition_variable cond;//条件变量
+	mutex mtx;//互斥变量
+	bool terminate;
+};
+
+```
+
+##### ThreadPool.cpp
+
+```
+#include"ThreadPool.h"
+
+ThreadPool::ThreadPool(int th_num)
+{
+	this->terminate = false;
+	for (int i = 0; i < th_num; i++)
+	{
+		shared_ptr<thread> th = make_shared<thread>(thread(&ThreadPool::run, this));
+		threads.push_back(th);
+	}
+}
+
+void ThreadPool::run() {
+	while (1)
+	{
+
+		unique_lock<mutex> lock(this->mtx);
+		this->cond.wait(lock, [this]() {
+			return !this->Task_empty() || this->Terminate();
+			});
+		if (this->Terminate()) {
+			break;
+		}
+		//exec
+		shared_ptr<Task> task = std::move(this->tasks.front());
+		this->tasks.pop();
+		lock.unlock();
+		task->func();
+	}
+}
+
+void ThreadPool::Destory()
+{
+	//唤醒所有工作线程
+	{
+		unique_lock<mutex> lock(this->mtx);
+		this->terminate = true;
+		cond.notify_all();
+	}
+	for (int i = 0; i < this->threads.size(); i++)
+	{
+		if (threads[i]->joinable()) {
+			threads[i]->join();
+		}
+		threads[i].reset();
+	}
+	threads.clear();
+}
+```
+

@@ -1,0 +1,64 @@
+标识符命名规则
+1.数据库名、表名不得超过20个字符，变量名限制为29个
+2.只能包含大写、小写、数字字符以及下划线
+3.同一个MySQL软件中，数据库不能同名；同一个库中，表不能重名；同一个表中，字段不能重名
+4.不能和保留字、函数名冲突
+5.保值字段名和类型的一致性
+
+创建数据库
+方式一：
+CREATE   DATABASE   t_db;
+方式二：
+CREATE   DATABASE   t_db2  CHARACTER   SET   'gbk';
+CREATE   DATABASE   t_db2  CHARACTER   SET   'utf8';（一般为utf8）
+方式三：（推荐）
+CREATE   DATABASE   IF  NOT   EXSITS  t_db2   CHARACTER  'utf8mb4'
+
+查看创建数据库是使用的SQL语句
+SHOW  CREATE  DATABASE  t_db；
+查看所有数据库
+SHOW   DATADASE ;
+使用数据库
+USE   DATABASE；
+查看当前数据库
+SELECT  DATABASE（）;
+查看数据库下的所有表
+SHOW  TABLES （FROM   数据库）;
+修改数据库
+ALTER   DATABASE  t_db  CHARACTER  SET  'gbk';(只能修改字符集类型)
+查看MySQL支持的字符集
+SHOW  CHARSET;
+查看MySQL默认的字符集
+SHOW  VARIABLES   LIKE‘%character%’;
+删除数据库
+DROP  DATABASE   IF  EXSISTS   t_db;
+
+创建表
+1.方式一：指定字段自己创建
+CREATE   TABLE  memp
+（
+	id  INT,
+	ename  VARCHAR( 10 ）；
+	sal  DOUBLE（10，2）；（10等于整数+小数，2是小数位数）
+）；
+2.方式二：基于其他的表创建新表
+CREATE  TABLE   myemp
+AS
+SELECT empno,ename,sal FROM emp;
+3.方式三：基于多个表创建新表
+CREATE  TABLE  myemp1
+AS
+SELECT  e.empno,d.deptno
+FROM   text.emp  e,text.dept  d;
+4.方式四：基于另一个表创建新表，但是只需要表结构，不需要数据
+CREATE  TABLE  emp2
+AS
+SELECT *  FROM  test.emp   WHERE 1=2;（寻找一个不成立的条件）
+查看表
+SHOW  TABLES  FROM  db;
+查看表结构
+DES C  memp;
+SHOW  CREATE  TABLE  memp;
+
+
+

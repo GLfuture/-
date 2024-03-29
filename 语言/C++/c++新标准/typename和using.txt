@@ -1,0 +1,10 @@
+C++中：
+1.size_t(unsigned int)
+2.DWORD(unsigned long)
+3.WORLD(unsigned short)
+定义数组Arry[ ]的[  ]中只能是常量，如1，2，3，4之类，不能是变量如a=1,Arry[a];
+using和typedef有类似作用，而且能够完全替代typedef
+typedef int INT；(起别名)
+using INT=int;
+注：using常用于静态成员，类中的枚举，定义类中的类型
+memcpy(A指针，B指针，B指针的大小）//将B指针拷贝到A指针

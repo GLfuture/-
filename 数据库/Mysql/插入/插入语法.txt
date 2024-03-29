@@ -1,0 +1,12 @@
+使用INSERT INTO 语句来向表中插入数据
+语法
+1.向指定字段添加数据
+INSERT INTO 表名（字段1，字段2...）VALUES（value1，value2..）
+2.给全部字段添加数据
+INSERT INTO 表名 VALUES（value1，value2...）
+3.批量添加数据（用单条INSERT语句处理多个插入要比使用多条INSERT语句更快）
+INSERT INTO 表名（字段1，字段2...）VALUES
+							（value1，value2...），
+							（value1，value2...），
+							   ...；
+

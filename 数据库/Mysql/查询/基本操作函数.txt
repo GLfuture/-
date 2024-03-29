@@ -1,0 +1,25 @@
+1.COUNT(*)被选列行数（包括NULL）
+2.COUNT(column)返回某列的行数（不包括NULL值）
+3.SUM（column）求和
+4.AVG（column）求平均值
+5.MIN（column）某列的最小值
+6.MAX（column）某列的最大值
+其中COUNT函数可用于任何数据类型（因为他只是计数）,而SUM，AVG函数只能对数值类型做计算，
+MAX和MIN可用于数值、字符串或是日期时间数据类型。
+
+分组
+语法：
+1.SELECT  分组字段/聚合函数  FROM 表名[WHERE   条件]  GROUP  BY  分组字段  [HAVING  分组后条件];
+(1)统计每个岗位的人数
+SELECT job,COUNT(*) FROM emp GROUP BY job;
+(2)统计出每种职位的最高和最低工资
+SELECT job,MIN(sal),MAX(sal)  FROM emp GROUP BY job;
+注意事项
+（1）如果一个查询之中（不存在GROUP BY子句），那么在SELECT子句之中只允许出现统计函数，其他任何字段都
+不允许出现。
+	错误的语句：SELECT ename,COUNT(job) FROM emp;
+	正确的语句：SELECT  COUNT( job )  FROM emp;
+2.在统计查询之中（存在GROUP  BY子句），SELECT子句之中只允许出现分组字段（GROUP  BY之后定义的字段）
+和统计函数字段，其他的任何字段都不允许出现
+	错误的语句：SELECT  ename ，COUNT（job）FROM emp  GROUP BY job;
+	正确的语句：SELECT  deptno ,  COUNT（job）FROM emp   GROUP BY job;

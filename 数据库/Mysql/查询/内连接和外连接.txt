@@ -1,0 +1,26 @@
+内连接：连接条件不成立的时候，条件为NULL或匹配不到数据，左表数据不显示
+（1）隐式内连接
+SELECT * FROM emp , dept WHERE emp.deptno = dept.deptno;
+（2）显式内连接
+SELECT * FROM emp INNER JOIN dept ON emp.deptno=dept.deptno ;
+外连接:连接条件不成立的时候，表中的数据照样显示
+（1）左外连接：左表中的数据显示
+SELECT* FROM emp LEFT JOIN dept ON emp.deptno=dept.deptno;
+（2）右外连接：右表中的数据显示
+SELECT * FROM emp RIGHT JOIN dept ON emp.deptno=dept.deptno;
+（3）全外连接：两个表中的数据都显示（MySQL中不支持全外连接）
+SELECT * FROM emp FULL JOIN dept ON emp.deptno=dept.deptno;
+（4）在左外连接的基础上，去掉满足连接条件的记录（左表连接条件不匹配的或者为NULL）
+SELECT* FROM emp LEFT JOIN dept ON emp.deptno=dept.deptno WHERE emp.deptno IS NULL;
+（5）在右外连接的基础上，去掉满足连接条件的记录（右表连接条件不匹配的或者为NULL）
+SELECT* FROM emp RIGHT JOIN dept ON emp.deptno=dept.deptno WHERE emp.deptno IS NULL;
+（6）全外连接（使用（1）和（4）或者（2）和（5）求并集）
+1.（1）和（4）
+SELECT* FROM emp LEFT JOIN dept ON emp.deptno=dept.deptno 
+UNION
+SELECT* FROM emp LEFT JOIN dept ON emp.deptno=dept.deptno WHERE emp.deptno IS NULL;
+（7）（使用（4）和（5）求并集）
+SELECT* FROM emp LEFT JOIN dept ON emp.deptno=dept.deptno WHERE emp.deptno IS NULL
+UNION
+SELECT* FROM emp RIGHT JOIN dept ON emp.deptno=dept.deptno WHERE emp.deptno IS NULL;
+

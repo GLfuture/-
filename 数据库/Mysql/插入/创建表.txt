@@ -1,0 +1,2 @@
+创建一个新表和emp表一样（数据类型）
+CREATE  TABLE  myemp  LIKE  emp；

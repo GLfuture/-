@@ -1,0 +1,68 @@
+1.流类
+	ofstream:用来打开文件进行写操作
+	ifstream:用来打开文件进行读操作
+	fstream：读写操作
+2.包含头文件
+	#include<fstream>
+3.打开文件
+	void open( const char *URL, ios::openmode mode)
+	mode:打开方式
+	ios::in		读的方式打开文件
+	ios::out	写的方式打开文件
+	ios::app	追加模式打开文件
+	ios::ate	打开已有文件，文件指针指向文件末尾
+	ios::trunc	文件不存在具有创建功能，可以组合ios::out|ios::trunc(默认以写形式打开文件)
+	ios::binary	二进制形式打开文件，默认ASCII方式打开文件
+	ios::nocreate	不创建的方式
+	ios::noreplace	不替换的方式
+	ios::in|ios::out	可读可写
+	ios::out|ios::binary	二进制写方式
+4.判断文件打开是否成功：
+	（1）is_open( )//失败返回0
+	（2）！文件对象
+5.close成员函数关闭文件
+6.读写文件
+	（1）流运算符<<	>>(eof( )成员函数返回当前文件是否在文件末尾)
+		注意点：会忽视空格和换行
+	（2）用成员函数的方式读写get（）和put（）函数读写//返回int类型
+		保留空格的方式
+	（3）二进制的形式读写文件write（*str,count）和read（*str,count）函数读写,count为最大长度
+7.文件指针的移动
+	重新定位文件指针
+	（1）ifstream的位置指针 
+	ifstream& seekg(long int pos);
+	ifstream& seekg(long int pos,ios_base::seekdir begin);
+	（2）ofstream的位置指针
+	ofstream& seekp(long int pos)
+	ofstream& seekp(long int pos,ios_base::seekdir begin);
+
+​	begin:参照点
+​	ios::beg	开始位置（默认）
+​	ios::cur	当前位置
+​	ios::end	结束位置
+
+从文件中读入一个图片
+
+```c++
+int read_image(char *filename,char *buffer)
+{
+    if(filename==NULL||buffer==NULL) return -1;
+    ifstream in(filename,ios::in|ios::binary);//以二进制的形式读入
+    if(!in.is_open()) {//检查是否打开文件
+        cout<<perror("open : ")<<endl;
+        return -2;
+    }
+    in.seekg(0,in.end);//将文件指针从开始移到结尾
+    int length=in.tellg();//取得文件指针的偏移量
+    in.seekg(0,in.beg);//将文件指针重新置到开始
+    in.read(buffer,length);//将二进制数据读入到buffer中
+    if(in)
+    {
+        cout<<"picture read suceessfully"<<endl;
+    }else{
+        cout<<"error: only"<<in.gcount()<<endl;
+    }
+    in.close();
+}
+```
+

@@ -1,0 +1,23 @@
+1.申请一个内存
+int * p=new int;
+删除该内存
+delete p;
+2.申请一段内存
+int *p=new int[3]
+删除该内存
+delete[] p;
+3.申请内存并初始化
+	（1）单个数据初始化( )
+		int *p=new int(100);
+		delete p;
+		p=nullptr;//避免悬空指针
+	（2）多个数据初始化{ }
+		int *p=new int [3]{1,2,3};
+		delete[] p;
+		p=nullptr;
+4.内存池：允许我们在申请的内存上再做内存申请
+	char* M=new char[1024];
+	int *p=new[M+0] int [3]//12字节储存整数
+	char*q=new(M+12) char [20]; 
+5.<assert.h>
+	assert(指针)//断言函数(指针为空，程序中断)

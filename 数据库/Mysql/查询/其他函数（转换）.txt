@@ -1,0 +1,11 @@
+1.进制转换
+函数						作用
+BIN（x）					返回x的二进制
+HEX（x）					返回x的十六进制
+OCT（x）					返回x的八进制
+CONV（x，from_base，to_base）	将from_base进制的x转成to_base进制
+
+2.IP地址转换
+函数						作用
+INET_ATON（ip）				将点分十进制的IP地址转为数字
+INET_NTOA（number）			将数字形式的ip转为点分十进制

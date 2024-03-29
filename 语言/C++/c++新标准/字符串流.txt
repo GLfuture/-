@@ -1,0 +1,34 @@
+1.字符流的头文件		#include<sstream>
+2.字符流对象的介绍
+	sstream: istringstream	ostringstream	stringstream
+	一般处理字符流的时候使用stringstream类的对象即可，因为处理字符要频繁涉及输入和输出
+3.获取stringstream对象中的string
+	string str（）//获取数据
+	void str（const string &str）//重置stringstream中的数据
+	例：stringstream  obj(string("I LOVE YOU"));
+	       cout<<obj.str( )<<endl;//输出
+	       obj.str(string("I MISS YOU"));//重置数据
+	       obj.str("")//类似清空
+4.字符流 更多地用来做数据的类型转换或者数据的切割
+	（1）数据的类型转换 整数转换为字符串
+	int  num;
+	char  str[20]="";
+	stringstream  stream(str);
+	stream<<num;//流入stream
+	stream>>str;//流入str
+	（2）做数据切割
+	stringstream  ip（“ip地址: 192.168.1.1”）;
+	char strip[20]="";
+	int ipNUM[4];
+	ip>>strip;
+	for(int i=0;i<4;i++)
+	{
+		char usekey;
+		ip>>ipNUM[i];
+		if(i!=3)
+		{
+			ip>>usekey;
+		}
+	}
+5.注意点：使用同一个流对象进行多次转换是，用完一次后必须调用clear函数进行清除处理
+	

@@ -1,0 +1,21 @@
+## DNS(UDP)
+
+![image-20230227110122813](images/image-20230227110122813.png)
+
+![image-20230227110146754](images/image-20230227110146754.png)
+
+![image-20230227110323693](images/image-20230227110323693.png)
+
+![image-20230227110333976](images/image-20230227110333976.png)
+
+![image-20230227110831162](images/image-20230227110831162.png)
+
+![image-20230227110842283](images/image-20230227110842283.png)
+
+![image-20230227110902948](images/image-20230227110902948.png)
+
+![image-20230227110913171](images/image-20230227110913171.png)
+
+代码：
+
+​			[DNS教程.pdf](file:///D:/零声Linux/网络/DNS/DNS教程.pdf)
